@@ -4,7 +4,9 @@ use std::io;
 enum BountyTier {
     Small,      // $1 - $30
     Medium,     // $31 - $100
-    HighValue,  // $100+
+    HighValue,  // $101 - $500
+    Legendary,  //$501+
+    Null
 }
 
 fn main() {
@@ -30,8 +32,12 @@ fn main() {
         BountyTier::Small
     } else if amount <= 100 {
         BountyTier::Medium
-    } else {
+    } else if amount <= 500 {
         BountyTier::HighValue
+    } else if amount >= 501 {
+        BountyTier::Legendary
+    } else {
+        BountyTier::Null
     };
 
     // 5. Using pattern matching to respond
@@ -39,5 +45,7 @@ fn main() {
         BountyTier::Small => println!("Tier: Quick warm-up task! Good for learning."),
         BountyTier::Medium => println!("Tier: Nice target! Worth dedicating a weekend."),
         BountyTier::HighValue => println!("Tier: Big bounty! Might require deep research."),
+        BountyTier::Legendary => println!("Tier: Massive bounty! Lock in."),
+        BountyTier::Null => println!("Invalid Bounty"),
     }
 }
