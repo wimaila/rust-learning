@@ -1,32 +1,56 @@
 use std::io;
 
 fn main() {
-    // 1. Get total bill price
-    println!("Enter total price:");
-    let mut total_price_input = String::new();
-    io::stdin()
-        .read_line(&mut total_price_input)
-        .expect("Failed to read line");
-    let total_price: f64 = total_price_input.trim().parse().expect("Please enter a number");
+    // 1. Get total bill price safely
+    let total_price: f64 = loop {
+        println!("Enter total price:");
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
 
-    // 2. Get number of payers
-    println!("Enter number of payers:");
-    let mut payers_input = String::new();
-    io::stdin()
-        .read_line(&mut payers_input)
-        .expect("Failed to read line");
-    let payers: f64 = payers_input.trim().parse().expect("Please enter a number");
+        match input.trim().parse() {
+            Ok(num) => break num, // Success: breaks the loop and saves the number
+            Err(_) => println!("Invalid input! Please enter a valid number."),
+        }
+    };
 
-    // 3. Get tip percentage
-    println!("Enter tip percentage (e.g. 5 for 5%):");
-    let mut tip_input = String::new();
-    io::stdin()
-        .read_line(&mut tip_input)
-        .expect("Failed to read line");
-    let tip_percentage: f64 = tip_input.trim().parse().expect("Please enter a number");
+    // 2. Get number of payers safely
+    let payers: f64 = loop {
+        println!("Enter number of payers:");
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
 
-    // 4. Calculate final price per person (using f64 so decimals work correctly)
+        match input.trim().parse() {
+            Ok(num) => {
+                if num <= 0.0 {
+                    println!("Number of payers must be greater than zero!");
+                    continue;
+                }
+                break num;
+            }
+            Err(_) => println!("Invalid input! Please enter a valid number."),
+        }
+    };
+
+    // 3. Get tip percentage safely
+    let tip_percentage: f64 = loop {
+        println!("Enter tip percentage (e.g. 5 for 5%):");
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+
+        match input.trim().parse() {
+            Ok(num) => break num,
+            Err(_) => println!("Invalid input! Please enter a valid number."),
+        }
+    };
+
+    // 4. Calculate final price per person
     let final_price = (total_price + (total_price * tip_percentage / 100.0)) / payers;
 
-    println!("Each person pays: ${:.2}", final_price);
-}
+    println!("\nEach person pays: ${:.2}", final_price);
+}   
